@@ -1,0 +1,17 @@
+springMVC的运行过程
+    请求进来以后会被DispatcherServlet进行拦截，Servlet-mapping中配置了拦截规则：*.do的都会被拦截
+    拦截下来以后，会根据请求路径到HandlerMapping中去寻找具体的Handler，并返回给DispatcherServlet
+    Handler会根据请求路径中携带的参数（hello.do），找到对应的bean（名为hello.do的bean）
+    DispatcherServlet会根据handler的实现方式不同，找到对应的HandlerAdapter
+    HandlerAdapter会调用具体的bean（HelloController）去处理逻辑
+    处理完逻辑以后会返回一个具体的ModelAndView，并包含一个视图名称（hello）
+    HandlerAdapter会将bean返回的这个ModelAndView交给DispatcherServlet
+    DispatcherServlet会找到对应的视图解析器
+    视图解析器会根据配置的解析规则：prefix+viename+suffix找到对应的jsp页面，将数据解析出来以后返还给请求方。
+    DispatcherServlet：前端控制器，是mvc中的c，是整个流程的控制中心，由它来调度用户的请求，并降低了各个主键的耦合
+    HandlerMapping：处理器映射器，负责根据用户的请求找到对应的handler(处理器)，
+        springMVC提供了不同的映射器来实现不同的映射方式，例如：配置文件，时间接口方式，注解方式等
+    HandlerAdapter：处理器适配器。主要是对处理器进行执行。可以通过扩展处理器适配器，对更多的处理器进行执行
+    Handler：处理器，他是我们开发中具体编写的业务处理器。DispatcherServlet把请求转发给Handler，由Handler对具体的业务进行处理。
+    ViewResolver：视图解析器，负责将处理的结果生成view视图，首先是根据配置找到具体的页面地址，然后生成view视图，最后对view视图进行渲染，返回给用户
+    view：视图，可以理解为一个页面，一般是html，但不限于html。一般是用标签将模型数据展示给用户，需要人工去编写页面。

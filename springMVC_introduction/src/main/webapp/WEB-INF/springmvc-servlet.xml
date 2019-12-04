@@ -3,15 +3,14 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+       http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
     <context:component-scan base-package="cn.zs"/>
-    <!--配置视图解析器。
-    prefix：指定视图所在的目录
-    suffix：指定视图后缀
-    例如：prefix=/WEB-INF/jsp  suffix=.jsp 当viewname=test 时。
-    就会跳转到 test.jsp页面。
-    -->
+    <bean id="/hello.do" class="cn.zs.contoller.HelloController"/>
 
-
+    <!--配置视图解析器-->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" id="internalResourceViewResolver">
+        <property name="prefix" value="WEB-INF/jsp/"/>
+        <property name="suffix" value=".jsp"/>
+     </bean>
 </beans>
