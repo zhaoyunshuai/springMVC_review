@@ -10,3 +10,7 @@ springMVC RequestMapping的用法
         params：用于指定限制请求参数的条件。要求请求参数的key和value必须配置一模一样
         headers：用于指定限制请求头的条件。
         以上四个属性出现两个或两个以上的时候，他们的关系是与的关系。即必须满足全部条件。
+        注意事项：当在类上使用RequestMapping，并设置值时
+        当在springmvc-servlet中匹配值视图的位置时，需要在路径的最前面加上/
+        例如：prefix="/WEB-INF/jsp/" 而不可写成 prefix="WEB-INF/jsp/"
+        不然会出现拼接视图路径错误的问题
