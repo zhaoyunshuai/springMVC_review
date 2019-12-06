@@ -14,3 +14,43 @@ springMVC RequestMapping的用法
         当在springmvc-servlet中匹配值视图的位置时，需要在路径的最前面加上/
         例如：prefix="/WEB-INF/jsp/" 而不可写成 prefix="WEB-INF/jsp/"
         不然会出现拼接视图路径错误的问题
+
+        标准的url映射
+            @RequestMapping("show")
+        Ant风格的映射
+            @RequestMapping("show?"):?表示单个字符，只能是单个（数字，字母，汉字甚至是特殊符号）
+            http://localhost:8080/hello/show1(2,a,B等).do
+            @RequestMapping("show*")：表示0个或多个字符。和?类似，只不过可以是0个或者多个
+            @RequestMapping("show**")：表示多级路径
+        Rest风格占位符的映射：占位符的主要应用是用来接收url中的参数
+            @RequestMapping("show/{username}/{password}")
+            http://localhost:8080/hello/show/zhangsan/1001.do
+            @PathVariable("key"):用于接收占位符中的参数
+            需要注意的是key必须占位符中的参数名保持一致。
+        限定请求方法的映射
+            主要是运用属性method 进行限定请求方法。
+            单个请求
+            @RequestMapping(value="show" method=RequestMethod.POST)
+            多个请求
+            @RequestMapping(value="show" method={RequestMethod.GET,RequestMethod.POST})
+            在发送请求时一定要选择对应的请求方法，否则会报405请求方法错误。
+        限定请求参数的映射
+            @RequestMapping(value=””,params=””)
+            params=”userId”：请求参数中必须带有userId
+            params=”!userId”：请求参数中不能包含userId
+            params=”userId=1”：请求参数中必须包含参数userId并且值必须为1
+            params=”userId!=1”：请求的所有参数中如果有userId必须不为1，参数中可以不包含userId
+            params={“userId”, ”name”}：请求参数中必须有userId，name参数
+            注意：参数名称和参数值直接不要有空格，即userId=1,而不是userId = 1，因为一般在url中是不会有空格的
+        组合注解
+            @GetMapping：相当于@RequestMapping（method = RequestMethod.GET）
+            @PostMapping：相当于@RequestMapping（method = RequestMethod.POST）
+            @PutMapping：相当于@RequestMapping（method = RequestMethod.PUT）
+            @DeleteMapping：相当于@RequestMapping（method = RequestMethod.DELETE）
+            也可以在注解中限定请求参数，用法和之前的一样。
+
+        其他类型返回值的方法
+            除了可以返回ModelAndView以外，还可以返回String类型或者void类型
+            String类型：返回的String字符转就是视图的名称
+            void类型：如果没有任何的返回值，就要返回一个状态码
+                @ResponseStatus(value=HttpStatus.OK)
