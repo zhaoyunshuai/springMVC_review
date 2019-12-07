@@ -5,7 +5,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <context:component-scan base-package="cn.zs.request"/>
+    <context:component-scan base-package="cn.zs"/>
     <bean id="interviewResourceServer" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <!--切记：此处在web-inf前需要加/，不然在方法上使用RequestMapping并设置值时会出错
         例：类上RequestMapping("hello")

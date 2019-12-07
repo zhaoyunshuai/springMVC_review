@@ -54,3 +54,13 @@ springMVC RequestMapping的用法
             String类型：返回的String字符转就是视图的名称
             void类型：如果没有任何的返回值，就要返回一个状态码
                 @ResponseStatus(value=HttpStatus.OK)
+
+        接收数据及数据绑定
+            1.接收servlet的内置对象
+                public String test(Model model,HttpServletResponse response,HttpServletRequest request,HttpSession session){
+                    model.addAttribute(response);
+                    return "视图名称"
+                }
+            2.接收普通类型的参数：
+                @RequestMapping(value="" required=true/false defaultValue="")
+                接收时
