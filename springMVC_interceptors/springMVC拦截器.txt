@@ -1,0 +1,44 @@
+springMVC拦截器：
+    当请求到达后端时，会被DispatcherServlet拦截，拦截下来后，会根据请求路径到HandlerMapping中查询据地的handler
+    HandlerMapping会返回一个可执行链（HandlerExecutionChain）给DispatcherServlet
+    这个可执行链中包含了一个Handler对象和Interceptors（拦截器集合）
+    拦截器的作用：一般是对处理器做预处理和后处理。
+
+    springMVC拦截器接口：HandlerInterceptor
+        其中定义了三个方法
+        1.preHandle：调用handler之前执行。称为预处理方法。
+            返回：true表示放行，后续业务继续执行。
+                false表示被拦截。后续业务逻辑不在执行。
+        2.postHandler：调用handler之后执行，称为后调方法。当多个拦截器共同作用的时候，后调方法时倒序执行的
+        3.afterCompletion：视图渲染之后执行，可以称为请求完成后的回调方法。同postHandler方法类似，也是倒序执行的。
+
+spring中的过滤器：
+    这里主要是解决post乱码的问题。springMVC中自带了CharacterEncodingFilter，可以解决post请求中的中文乱码问题。
+    <!--post请求乱码过滤器,注意这是配置在web.xml中的-->
+    <filter>
+        <filter-name>characterEncodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>utf-8</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>characterEncodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    get请求乱码，这个比较好解决，只要在tomcat中配置一下即可
+        <plugins>
+            <!-- 配置Tomcat插件 -->
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <configuration>
+                    <port>8080</port>
+                    <path>/</path><!-- 相当于工程名称，一旦配置了/，那么在访问时可以省略工程名称 -->
+                    <!--设置get请求编码集-->
+                    <uriEncoding>utf-8</uriEncoding>
+                </configuration>
+            </plugin>
+        </plugins>

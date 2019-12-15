@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+    <context:component-scan base-package="cn.zs"/>
+    <bean id="internalResourceViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/jsp/"></property>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+
+
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <!--拦截路径：绝对路径=====http://localhost:8080/springmvc 其中springmvc是项目名。
+                /：表示绝对路径。
+                /*：表示绝对路径下的任意一级路径
+                /**：表示绝对路径下的任意多级目录
+                之前之所以我们看不到springmvc是因为，我们在tomcat插件中配置了path为/，而省略了项目名称springmvc
+            -->
+            <mvc:mapping path="/**"/>
+            <bean id="myInterceptor1" class="cn.zs.interceptor.MyInterceptor"></bean>
+        </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean id="myInterceptor2" class="cn.zs.interceptor.MyInterceptor2"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+
+</beans>
