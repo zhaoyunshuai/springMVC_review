@@ -4,6 +4,6 @@
     <title>Title</title>
 </head>
 <body>
-<h1>String做为返回值类型，返回的字符串就是视图名称</h1>
+<h1>${msg}</h1>
 </body>
 </html>

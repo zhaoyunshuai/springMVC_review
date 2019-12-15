@@ -2,10 +2,16 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+   http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
 
     <context:component-scan base-package="cn.zs"/>
+    <mvc:annotation-driven></mvc:annotation-driven>
     <bean id="interviewResourceServer" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <!--切记：此处在web-inf前需要加/，不然在方法上使用RequestMapping并设置值时会出错
         例：类上RequestMapping("hello")
@@ -15,4 +21,11 @@
         <property name="prefix" value="/WEB-INF/jsp/"/>
         <property name="suffix" value=".jsp"/>
     </bean>
+<!--设置文件上传解析器 id名称一定要固定，不可进行变更，不然会出错-->
+    <bean id ="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!--设置编码，主要是针对文件名，如果文件名中有中文，可以设置编码器防止乱码-->
+        <property name="defaultEncoding" value="utf-8"/>
+        <!--设置文件上传大小，不管是上传多少个文件，总的大小不能超过此属性设置的值。-->
+        <property name="maxUploadSize" value="5242880"/>
+     </bean>
 </beans>

@@ -26,7 +26,7 @@ springMVC RequestMapping的用法
             @RequestMapping("show/{username}/{password}")
             http://localhost:8080/hello/show/zhangsan/1001.do
             @PathVariable("key"):用于接收占位符中的参数
-            需要注意的是key必须占位符中的参数名保持一致。
+            需要注意的是key必须占位符中的参数名保持一致，而形式参数的名称可以随意的进行配置。
         限定请求方法的映射
             主要是运用属性method 进行限定请求方法。
             单个请求
@@ -56,11 +56,73 @@ springMVC RequestMapping的用法
                 @ResponseStatus(value=HttpStatus.OK)
 
         接收数据及数据绑定
-            1.接收servlet的内置对象
+            1.接收servlet的内置对象 cookie，session等都可以进行接收
                 public String test(Model model,HttpServletResponse response,HttpServletRequest request,HttpSession session){
                     model.addAttribute(response);
                     return "视图名称"
                 }
             2.接收普通类型的参数：
-                @RequestMapping(value="" required=true/false defaultValue="")
-                接收时
+                传参形式：url?参数名=参数值
+                @RequestParam(value="参数名"，required="true/false",defaultValue="参数值")
+                注解中的参数名必须和url中拼接的参数名相同
+                required属性只有在没有配置defaultValue属性时才有作用。
+            3.接收基本类型的参数
+                字符串、整型、浮点型、布尔型、数组
+                常用的方式就是form表单进行提交数据
+            4.Pojo对象的绑定
+                SpringMVC会将请求参数名和POJO实例类中的属性名(set方法)进行匹配。如果名称一致，把值填充进对象中，并且支持级联。(例如：user.dept.id)
+                一般适用于form表单进行提交数据，用pojo进行封装。在接收POJO对象的同时也能够接收普通类型的对象。
+            5.集合的绑定
+               集合元素为基本类型
+               集合元素为POJO类型
+            6.接收Cookie，@CookieValue() 和@RequestParam用法相似。
+
+    JSTL标签库：基本不怎么用，只是知道有这么个东西即可。
+
+    JSON：由于jackson 包总是导入错误，所以就没有进行写demo
+        @ResponseBody：将controller方法的返回值转化成JSON，称为序列化
+        @RequestBody：将接收到的JSON数据，转化成POJO对象，称为反序列化。
+            用于参数前，自动的将前端传过来的参数封装到注解后的参数中。（注解后的参数多为POJO对象。）
+        响应json数据
+            比较简单，只需要加一个注解即可，就会把响应的数据转化成json格式
+            此处需要注意，在使用jackson转换器的时候，json数据需要消息转换器，HttpMessageConverter的支持，该消息转换器默认是不开启的
+            所以需要进行配置注解驱动<mvc:annotation-driven/>
+        使用pojo接收json
+            （@RequestBody User user）：会将前端传过来的数据，封装到User对象中。
+        使用String接收json数据
+            json数据本质上就是一串String字符串。所以可以直接用String进行接收
+            但是需要注意中文乱码的问题。因为在接收String时候是使用的StringHttpMessageConverter转换器，而这个转换器的编码是ISO_8859_1
+            所以需要在SpringMVC中配置一下，需要注意的是，这个消息转换器，需要配置在注解驱动中
+            <!--配置注解驱动-->
+            <mvc:annotation-driven>
+                <mvc:message-converters>
+                    <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                        <constructor-arg index="0" value="utf-8"></constructor-arg>
+                    </bean>
+                </mvc:message-converters>
+            </mvc:annotation-driven>
+
+            @RestController：在类上使用，表明此类的所有返回值都将转化成json串进行返回。
+            是@ReponseBody和@Controller两个注解的结合。
+    SpringMVC文件上传。
+        万事第一步，导入依赖库。
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>1.3.1</version>
+        </dependency>
+        配置文件上传解析器。主要用于设置文件上传的大小，编码器等参数。
+            此处需要注意，必须配置id属性，而且id名必须为：multipartResolver
+            <!--配置文件上传解析器-->
+            <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+                <!--设置上传文件大小-->
+                <property name="maxUploadSize" value="5242880"></property>
+                <!--设置上传文件编码集-->
+                <property name="defaultEncoding" value="utf-8"></property>
+            </bean>
+
+
+    转发重定向。
+        forward：转发
+        redirect：重定向。
+        直接在return语句中添加这两个关键字即可，例：return "forward:"
